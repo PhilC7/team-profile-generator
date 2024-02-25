@@ -40,14 +40,14 @@ async function addManager() {
     ]);
 
     // create a new object for manager
-    const employee = new Manager(
+    const manager = new Manager(
         managerInfo.name,
         managerInfo.id,
         managerInfo.email,
         managerInfo.officeNumber
     );
 
-    team.push(employee); // add to team array
+    team.push(manager); // add to team array
     await addStaff(); // call function to add extra staff
 
 
@@ -70,11 +70,11 @@ async function addStaff() {
     } else if (staffType.staff === "Intern") {
         await addIntern();
     } else {
-        await render();
+        await generateHTML();
     }
 };
 
-
+// function to get engineer info
 async function addEngineer() {
     const engineerInfo = await inquirer.prompt([
         {
@@ -107,10 +107,11 @@ async function addEngineer() {
         engineerInfo.github
     );
 
-    team.push(engineerInfo);
-    await addStaff();
+    team.push(engineer); // push to team array
+    await addStaff(); // call function to add more staff
 };
 
+// function to get intern info
 async function addIntern() {
     const internInfo = await inquirer.prompt([
         {
@@ -130,7 +131,7 @@ async function addIntern() {
         },
         {
             type: "input",
-            name: "shool",
+            name: "school",
             message: "What is the Intern's school?"
         }
     ]);
@@ -140,11 +141,18 @@ async function addIntern() {
         internInfo.name,
         internInfo.id,
         internInfo.email,
-        internInfo.officeNumber
+        internInfo.school
     );
 
-    team.push(internInfo);
-    await addStaff();
+    team.push(intern); // push to team array
+    await addStaff(); // call function to add more staff
 };
 
-addManager();
+// function to generate HTML page based on user input
+const generateHTML = function () {
+    const html = render(team);
+    fs.writeFileSync(outputPath, html);
+    console.log("Your page has been successfully generated!");
+};
+
+addManager(); // initial function call to start
